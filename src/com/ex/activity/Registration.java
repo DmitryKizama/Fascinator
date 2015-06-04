@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.ex.api.UserAPI;
 import com.ex.fascinator.Fascinator;
 import com.ex.fascinator.R;
+import com.ex.objects.Animators;
 import com.ex.objects.User;
 
 public class Registration extends AppCompatActivity {
@@ -33,6 +33,7 @@ public class Registration extends AppCompatActivity {
 
 	protected int CONNECTION_OK = 1;
 	private User user = new User();
+	private Animators anim = new Animators();
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,7 +114,9 @@ public class Registration extends AppCompatActivity {
 		Log.d("Shit", "create user");
 		user.setUsername(entLogin.getText().toString());
 		user.setPassword(entPassword.getText().toString());
-
+		if (!user.isAdmin()) {
+			anim.setAnimator(entLogin.getText().toString());
+		}
 		UserAPI c = new UserAPI();
 		c.sync(user);
 		c.handler = new Handler() {

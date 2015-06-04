@@ -9,7 +9,6 @@ public class Order {
 	private int dlitelnost;
 	private static final int ANIMATORS = 1;
 	private String character;
-	private String AnimatorsName;
 	private String Adress;
 	private String AdditionalServices;
 	private int price;
@@ -52,14 +51,6 @@ public class Order {
 
 	public void setCharacter(String character) {
 		this.character = character;
-	}
-
-	public String getAnimatorsName() {
-		return AnimatorsName;
-	}
-
-	public void setAnimatorsName(String animatorsName) {
-		AnimatorsName = animatorsName;
 	}
 
 	public String getAdress() {
