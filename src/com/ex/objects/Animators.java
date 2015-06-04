@@ -1,9 +1,10 @@
 package com.ex.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Animators {
-	private List<String> animators;
+	private List<String> animators = new ArrayList<String>(	);
 	private String animator;
 
 	public String getAnimator() {

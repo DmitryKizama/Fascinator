@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ex.api.UserAPI;
-import com.ex.fascinator.Fascinator;
 import com.ex.fascinator.R;
+import com.parse.ParseUser;
 
 public class Login extends Activity {
 	protected static final int CONNECTION_OK = 1;
@@ -29,11 +29,11 @@ public class Login extends Activity {
 		setContentView(R.layout.activity_login);
 		Log.d("User", "start login activity");
 		// comment this if u want to see login and registration pages!
-		// ParseUser currentUser = ParseUser.getCurrentUser();
-		// if (currentUser != null) {
-		// Log.d("User", "user = " + currentUser.getUsername());
-		// loginOk();
-		// }
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser != null) {
+			Log.d("User", "user = " + currentUser.getUsername());
+			loginAdmin();
+		}
 		entLogin = (TextView) findViewById(R.id.etnNickName);
 		entPassword = (TextView) findViewById(R.id.etPassword);
 
@@ -60,12 +60,27 @@ public class Login extends Activity {
 	}
 
 	public void login() {
-		UserAPI c = new UserAPI();
-		c.login(entLogin.getText().toString(), entPassword.getText().toString());
-		c.handler = new Handler() {
+		final UserAPI userAPI = new UserAPI();
+		userAPI.login(entLogin.getText().toString(), entPassword.getText()
+				.toString());
+		Log.d("login", "entered in method");
+		userAPI.handler = new Handler() {
 			public void handleMessage(Message msg) {
 				if (msg.what == CONNECTION_OK) {
-					loginOk();
+					Log.d("login", "entered in first handler");
+					userAPI.isAdmin();
+					userAPI.handlerIsAdmin = new Handler() {
+						@Override
+						public void handleMessage(Message msg) {
+							Log.d("login", "entered in second handler");
+							if (msg.what == userAPI.CONNECTION_OK) {
+								loginAdmin();
+							} else {
+								loginAnimator();
+							}
+						}
+					};
+
 				} else {
 					incorrect();
 				}
@@ -78,10 +93,20 @@ public class Login extends Activity {
 				Toast.LENGTH_SHORT).show();
 	}
 
-	public void loginOk() {
+	public void loginAnimator() {
 		Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT)
 				.show();
-		Intent intent = new Intent(this, Fascinator.class);
+		Intent intent = new Intent(this, AnimatorActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+	public void loginAdmin() {
+		Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT)
+				.show();
+		Intent intent = new Intent(this, AdminActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);

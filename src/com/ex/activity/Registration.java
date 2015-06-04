@@ -14,6 +14,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ex.api.AnimatorsAPI;
 import com.ex.api.UserAPI;
 import com.ex.fascinator.Fascinator;
 import com.ex.fascinator.R;
@@ -116,6 +117,8 @@ public class Registration extends AppCompatActivity {
 		user.setPassword(entPassword.getText().toString());
 		if (!user.isAdmin()) {
 			anim.setAnimator(entLogin.getText().toString());
+			AnimatorsAPI a = new AnimatorsAPI();
+			a.create(anim);
 		}
 		UserAPI c = new UserAPI();
 		c.sync(user);

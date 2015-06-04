@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.ex.objects.User;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -28,6 +29,8 @@ public class UserAPI {
 	public int CONNECTION_OK = 1;
 
 	public Handler handler = new Handler();
+
+	public Handler handlerIsAdmin = new Handler();
 
 	public void create(User user) {
 		Log.d("User", "start method create in UserCRUD");
@@ -62,6 +65,32 @@ public class UserAPI {
 					handler.sendEmptyMessage(CONNECTION_OK);
 				} else {
 					handler.sendEmptyMessage(0);
+				}
+			}
+		});
+	}
+
+	public void isAdmin() {
+		Log.d("login", "entered in @is admin@");
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ADMIORUSER);
+		query.whereEqualTo(USERNAME, ParseUser.getCurrentUser().getUsername());
+		Log.d("login", "user = " + ParseUser.getCurrentUser().getUsername());
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
+
+			@Override
+			public void done(ParseObject parseName, ParseException e) {
+				if (e == null) {
+					Log.d("login", "find this");
+					if (parseName.getBoolean(ISADMINORUSER)) {
+						Log.d("login", "true");
+						handlerIsAdmin.sendEmptyMessage(CONNECTION_OK);
+					} else {
+						Log.d("login", "false");
+						handlerIsAdmin.sendEmptyMessage(0);
+					}
+
+				} else {
+					e.printStackTrace();
 				}
 			}
 		});
