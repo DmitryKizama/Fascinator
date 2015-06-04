@@ -19,6 +19,7 @@ public class ListViewAdapter extends BaseAdapter {
 	private ArrayList<String> animators;
 	private int mSelectedVariation = -1;
 	private RadioButton mSelectedRB;
+	public boolean clicked = false;
 
 	public ListViewAdapter(Context context, ArrayList<String> animatorsStr) {
 		ctx = context;
@@ -61,11 +62,11 @@ public class ListViewAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-
+				clicked = true;
 				if (position != mSelectedVariation && mSelectedRB != null) {
 					mSelectedRB.setChecked(false);
-				}
 
+				}
 				mSelectedVariation = position;
 				mSelectedRB = (RadioButton) v;
 			}

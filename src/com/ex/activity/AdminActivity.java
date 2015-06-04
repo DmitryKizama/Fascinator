@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -47,10 +46,6 @@ public class AdminActivity extends AppCompatActivity {
 					listAdapter = new ListViewAdapter(AdminActivity.this,
 							an.listAnimators);
 					listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-					// listAdapter = new ArrayAdapter<String>(
-					// getApplicationContext(),
-					// android.R.layout.simple_list_item_single_choice,
-					// an.listAnimators);
 					listView.setAdapter(listAdapter);
 				} else {
 					Log.d("AnimatorsAPI", "something wrong");
@@ -85,8 +80,10 @@ public class AdminActivity extends AppCompatActivity {
 	}
 
 	private boolean check() {
-		boolean chek = false;
+		if (listAdapter.clicked)
+			return true;
+		else
+			return false;
 
-		return chek;
 	}
 }
