@@ -6,7 +6,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,16 +15,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ex.adapters.ListViewAdapter;
-import com.ex.api.AnimatorsAPI;
 import com.ex.fascinator.R;
 
-public class AdminActivity extends AppCompatActivity {
-
+public class AdminChooseAnimatorActivity extends AppCompatActivity {
 	private ListView listView;
 	private Button btnCreateOrder;
 
 	private ListViewAdapter listAdapter;
-	private AnimatorsAPI an = new AnimatorsAPI();
 	private List<String> lis = new ArrayList<String>();
 	private Handler han = new Handler();
 
@@ -36,22 +32,21 @@ public class AdminActivity extends AppCompatActivity {
 
 		listView = (ListView) findViewById(R.id.list);
 
-		an.read();
 		Log.d("AnimatorsAPI", "finished read");
-		an.h = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				if (msg.what == an.CONNECTION) {
-					Log.d("AnimatorsAPI", "first handler");
-					listAdapter = new ListViewAdapter(AdminActivity.this,
-							an.listAnimators);
-					listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-					listView.setAdapter(listAdapter);
-				} else {
-					Log.d("AnimatorsAPI", "something wrong");
-				}
-			}
-		};
+		// an.h = new Handler() {
+		// @Override
+		// public void handleMessage(Message msg) {
+		// if (msg.what == an.CONNECTION) {
+		// Log.d("AnimatorsAPI", "first handler");
+		// listAdapter = new ListViewAdapter(
+		// AdminChooseAnimatorActivity.this, an.listAnimators);
+		// listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		// listView.setAdapter(listAdapter);
+		// } else {
+		// Log.d("AnimatorsAPI", "something wrong");
+		// }
+		// }
+		// };
 
 		btnCreateOrder = (Button) findViewById(R.id.btnCreateOrder);
 		btnCreateOrder.setOnClickListener(new OnClickListener() {
@@ -72,7 +67,8 @@ public class AdminActivity extends AppCompatActivity {
 	private void createNewOrder() {
 		Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT)
 				.show();
-		Intent intent = new Intent(AdminActivity.this, CreateOrder.class);
+		Intent intent = new Intent(AdminChooseAnimatorActivity.this,
+				CreateOrder.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);

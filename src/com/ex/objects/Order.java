@@ -1,12 +1,10 @@
 package com.ex.objects;
 
-import java.sql.Date;
-
 public class Order {
 	private String customerName;
 	private String phoneNumber;
-	private Date date;
-	private int dlitelnost;
+	private String date;
+	private String numberofhourse;
 	private static final int ANIMATORS = 1;
 	private String character;
 	private String Adress;
@@ -29,20 +27,20 @@ public class Order {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
-	public int getDlitelnost() {
-		return dlitelnost;
+	public String getNumberofhourse() {
+		return numberofhourse;
 	}
 
-	public void setDlitelnost(int dlitelnost) {
-		this.dlitelnost = dlitelnost;
+	public void setNumberofhours(String dlitelnost) {
+		this.numberofhourse = dlitelnost;
 	}
 
 	public String getCharacter() {

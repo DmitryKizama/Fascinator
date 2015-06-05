@@ -14,9 +14,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ex.api.AnimatorsAPI;
 import com.ex.api.UserAPI;
-import com.ex.fascinator.Fascinator;
 import com.ex.fascinator.R;
 import com.ex.objects.Animators;
 import com.ex.objects.User;
@@ -34,16 +32,14 @@ public class Registration extends AppCompatActivity {
 
 	protected int CONNECTION_OK = 1;
 	private User user = new User();
-	private Animators anim = new Animators();
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("Shit", "onCreate start");
 		setContentView(R.layout.activity_registr);
 		Log.d("User", "start onCreate create user activity ");
-
 		rGroup = (RadioGroup) findViewById(R.id.radioGroup);
-
+		user.setIsAdmin(true);
 		rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -52,10 +48,10 @@ public class Registration extends AppCompatActivity {
 					Log.d("Shit", "chosen Admin");
 					Toast.makeText(getApplicationContext(), "Are you sure?",
 							Toast.LENGTH_SHORT).show();
-					user.setAdmin(true);
+					user.setIsAdmin(true);
 				} else {
 					Log.d("Shit", "is a User");
-					user.setAdmin(false);
+					user.setIsAdmin(false);
 				}
 			}
 		});
@@ -100,9 +96,18 @@ public class Registration extends AppCompatActivity {
 
 	private void autorisation() {
 		Toast.makeText(Registration.this, "Welcome", Toast.LENGTH_SHORT).show();
-		Intent intent = new Intent(Registration.this, Fascinator.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		if (user.getIsAdmin()) {
+			Intent intent = new Intent(Registration.this,
+					AdminFirstActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		} else {
+			Intent intent = new Intent(Registration.this,
+					AnimatorActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+
 	}
 
 	private void incorrect() {
@@ -115,16 +120,11 @@ public class Registration extends AppCompatActivity {
 		Log.d("Shit", "create user");
 		user.setUsername(entLogin.getText().toString());
 		user.setPassword(entPassword.getText().toString());
-		if (!user.isAdmin()) {
-			anim.setAnimator(entLogin.getText().toString());
-			AnimatorsAPI a = new AnimatorsAPI();
-			a.create(anim);
-		}
-		UserAPI c = new UserAPI();
+		final UserAPI c = new UserAPI();
 		c.sync(user);
 		c.handler = new Handler() {
 			public void handleMessage(Message msg) {
-				if (msg.what == CONNECTION_OK) {
+				if (msg.what == c.CONNECTION_OK) {
 					Log.d("Shit", "handler ok");
 					autorisation();
 				} else {

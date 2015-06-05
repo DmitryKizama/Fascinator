@@ -1,5 +1,6 @@
 package com.ex.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Handler;
@@ -22,26 +23,27 @@ public class UserAPI {
 	private static final String USERNAME = "username";
 	private static final String PASSWORD = "password";
 	private static final String EMAIL = "email";
+	private static final String ISADMIN = "isAdmin";
 
-	private static final String ADMIORUSER = "AdminorUser";
-	private static final String ISADMINORUSER = "isAdmin";
-
-	public int CONNECTION_OK = 1;
+	public static final int CONNECTION_OK = 1;
+	public static final int ISADMIN_TRUE = 1;
+	public static final int ISADMIN_FALSE = 2;
 
 	public Handler handler = new Handler();
 
 	public Handler handlerIsAdmin = new Handler();
+	public ArrayList<String> listAnimators;
 
 	public void create(User user) {
 		Log.d("User", "start method create in UserCRUD");
 		ParseUser usr = new ParseUser();
-		usr.put(USERNAME, user.getUsername());
-		usr.put(PASSWORD, user.getPassword());
+		usr.setUsername(user.getUsername());
+		usr.setPassword(user.getPassword());
+		usr.put(ISADMIN, user.getIsAdmin());
 		Log.d("User", user.getUsername());
-		ParseObject bool = new ParseObject(ADMIORUSER);
-		bool.put(USERNAME, user.getUsername());
-		bool.put(ISADMINORUSER, user.isAdmin());
-		bool.saveInBackground();
+		Log.d("User", "is admin = " + user.getIsAdmin());
+		Log.d("User", user.getPassword());
+
 		usr.signUpInBackground(new SignUpCallback() {
 
 			@Override
@@ -58,11 +60,16 @@ public class UserAPI {
 		});
 	}
 
-	public void login(String name, String password) {
-		ParseUser.logInInBackground(name, password, new LogInCallback() {
-			public void done(ParseUser user, ParseException e) {
-				if (user != null) {
-					handler.sendEmptyMessage(CONNECTION_OK);
+	public void readAnimators() {
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		query.whereEqualTo(ISADMIN, false);
+		query.findInBackground(new FindCallback<ParseUser>() {
+			public void done(List<ParseUser> objects, ParseException e) {
+				if (e == null) {
+					for (ParseUser parseUser : objects) {
+						listAnimators.add(parseUser.getString(USERNAME));
+						handler.sendEmptyMessage(CONNECTION_OK);
+					}
 				} else {
 					handler.sendEmptyMessage(0);
 				}
@@ -70,27 +77,19 @@ public class UserAPI {
 		});
 	}
 
-	public void isAdmin() {
-		Log.d("login", "entered in @is admin@");
-		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ADMIORUSER);
-		query.whereEqualTo(USERNAME, ParseUser.getCurrentUser().getUsername());
-		Log.d("login", "user = " + ParseUser.getCurrentUser().getUsername());
-		query.getFirstInBackground(new GetCallback<ParseObject>() {
+	public void login(String name, String password) {
+		ParseUser.logInInBackground(name, password, new LogInCallback() {
+			public void done(ParseUser user, ParseException e) {
+				if (user != null) {
 
-			@Override
-			public void done(ParseObject parseName, ParseException e) {
-				if (e == null) {
-					Log.d("login", "find this");
-					if (parseName.getBoolean(ISADMINORUSER)) {
-						Log.d("login", "true");
-						handlerIsAdmin.sendEmptyMessage(CONNECTION_OK);
-					} else {
-						Log.d("login", "false");
-						handlerIsAdmin.sendEmptyMessage(0);
-					}
+					Log.d("User", "is admin = " + ISADMIN);
+					if (user.getBoolean(ISADMIN))
+						handler.sendEmptyMessage(ISADMIN_TRUE);
+					else
+						handler.sendEmptyMessage(ISADMIN_FALSE);
 
 				} else {
-					e.printStackTrace();
+					handler.sendEmptyMessage(0);
 				}
 			}
 		});
@@ -109,48 +108,6 @@ public class UserAPI {
 				});
 	}
 
-	public void updateName(final String name, final String id) {
-		Log.d("UserAPI", "start updateName");
-		ParseQuery<ParseUser> query = ParseUser.getQuery();
-		query.whereEqualTo(USERNAME, ParseUser.getCurrentUser().getUsername());
-		query.findInBackground(new FindCallback<ParseUser>() {
-			public void done(List<ParseUser> objects, ParseException e) {
-				if (e == null) {
-					for (ParseUser parseUser : objects) {
-						Log.d("UserAPI", "find object");
-						if (parseUser.getObjectId().equals(id)) {
-							Log.d("UserAPI", "found, rename");
-							ParseUser.getCurrentUser().put(USERNAME, name);
-						}
-					}
-				} else {
-					Log.d("UserAPI", "problem in updateName");
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public void updateEmail(final String email, final String id) {
-		Log.d("UserAPI", "start updateEmail");
-		ParseQuery<ParseUser> queryOne = ParseUser.getQuery();
-		queryOne.whereEqualTo(EMAIL, email);
-		queryOne.findInBackground(new FindCallback<ParseUser>() {
-			public void done(List<ParseUser> objects, ParseException e) {
-				if (e == null) {
-					for (ParseUser parseUser : objects) {
-						if (parseUser.getObjectId().equals(id)) {
-							ParseUser.getCurrentUser().put(EMAIL, email);
-						}
-					}
-				} else {
-					Log.d("UserAPI", "problem in updateEmail");
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	public User getCurrentUser() {
 		User user = new User();
 		user.setObjectId(ParseUser.getCurrentUser().getObjectId());
@@ -160,12 +117,12 @@ public class UserAPI {
 
 	public void sync(User user) {
 		Log.d("User", "start method sync");
-		if (user.getObjectId() == null) {
-			Log.d("User", "create user");
-			create(user);
-		} else {
-			updateName(user.getUsername(), user.getObjectId());
-		}
+		// if (user.getObjectId() == null) {
+		// Log.d("User", "create user");
+		create(user);
+		// } else {
+		// updateName(user.getUsername(), user.getObjectId());
+		// }
 	}
 
 }

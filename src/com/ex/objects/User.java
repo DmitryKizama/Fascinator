@@ -4,7 +4,7 @@ public class User {
 	private String objectId;
 	private String username;
 	private String password;
-	private boolean isAdmin = false;
+	private boolean isAdmin;
 	private static User instance;
 
 	public User() {
@@ -41,11 +41,11 @@ public class User {
 		this.password = password;
 	}
 
-	public boolean isAdmin() {
+	public boolean getIsAdmin() {
 		return isAdmin;
 	}
 
-	public void setAdmin(boolean isAdmin) {
+	public void setIsAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
 
