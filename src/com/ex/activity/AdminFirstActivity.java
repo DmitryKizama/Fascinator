@@ -51,7 +51,7 @@ public class AdminFirstActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				connect = false;
-				Intent intent = new Intent(v.getContext(), CreateOrder.class);
+				Intent intent = new Intent(v.getContext(), InformationOfOrder.class);
 				startActivity(intent);
 			}
 		});

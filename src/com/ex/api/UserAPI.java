@@ -26,7 +26,6 @@ public class UserAPI {
 	private static final String ISADMIN = "isAdmin";
 
 	public static final int CONNECTION_OK = 1;
-	public static final int CONNECTION = 3;
 
 	public static final int ISADMIN_TRUE = 1;
 	public static final int ISADMIN_FALSE = 2;
@@ -71,7 +70,7 @@ public class UserAPI {
 				if (e == null) {
 					for (ParseUser parseUser : objects) {
 						listAnimators.add(parseUser.getString(USERNAME));
-						handler.sendEmptyMessage(CONNECTION);
+						handler.sendEmptyMessage(CONNECTION_OK);
 					}
 				} else {
 					handler.sendEmptyMessage(0);

@@ -22,7 +22,7 @@ import com.ex.api.UserAPI;
 import com.ex.fascinator.R;
 import com.ex.objects.Order;
 
-public class CreateOrder extends AppCompatActivity {
+public class InformationOfOrder extends AppCompatActivity {
 
 	private EditText telephoneNumber;
 	private EditText numberHours;
@@ -80,7 +80,7 @@ public class CreateOrder extends AppCompatActivity {
 					numberHours.setText(o.listInfOrder.get(4));
 
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-							CreateOrder.this,
+							InformationOfOrder.this,
 							android.R.layout.simple_spinner_item, data);
 					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -110,7 +110,7 @@ public class CreateOrder extends AppCompatActivity {
 				if (msg.what == CONNECTION) {
 
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-							CreateOrder.this,
+							InformationOfOrder.this,
 							android.R.layout.simple_spinner_item, data);
 					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -155,7 +155,7 @@ public class CreateOrder extends AppCompatActivity {
 		userapi.handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == userapi.CONNECTION) {
+				if (msg.what == userapi.CONNECTION_OK) {
 
 					for (String str : userapi.listAnimators) {
 						data.add(str);

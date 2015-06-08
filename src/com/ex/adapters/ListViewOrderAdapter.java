@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ex.activity.AdminFirstActivity;
-import com.ex.activity.CreateOrder;
+import com.ex.activity.InformationOfOrder;
 import com.ex.api.OrderAPI;
 import com.ex.fascinator.R;
 
@@ -66,7 +66,7 @@ public class ListViewOrderAdapter extends BaseAdapter {
 
 						AdminFirstActivity.connect = true;
 						Intent intent = new Intent(v.getContext(),
-								CreateOrder.class);
+								InformationOfOrder.class);
 						v.getContext().startActivity(intent);
 					}
 				});
