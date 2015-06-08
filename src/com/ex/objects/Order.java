@@ -6,6 +6,7 @@ public class Order {
 	private String date;
 	private String numberofhourse;
 	private static final int ANIMATORS = 1;
+	private String animatorName;
 	private String character;
 	private String Adress;
 	private String AdditionalServices;
@@ -77,6 +78,14 @@ public class Order {
 
 	public static int getAnimators() {
 		return ANIMATORS;
+	}
+
+	public String getAnimatorName() {
+		return animatorName;
+	}
+
+	public void setAnimatorName(String animatorName) {
+		this.animatorName = animatorName;
 	}
 
 }

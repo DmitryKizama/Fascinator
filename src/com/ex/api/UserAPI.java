@@ -26,13 +26,15 @@ public class UserAPI {
 	private static final String ISADMIN = "isAdmin";
 
 	public static final int CONNECTION_OK = 1;
+	public static final int CONNECTION = 3;
+
 	public static final int ISADMIN_TRUE = 1;
 	public static final int ISADMIN_FALSE = 2;
 
 	public Handler handler = new Handler();
 
 	public Handler handlerIsAdmin = new Handler();
-	public ArrayList<String> listAnimators;
+	public ArrayList<String> listAnimators = new ArrayList<String>();
 
 	public void create(User user) {
 		Log.d("User", "start method create in UserCRUD");
@@ -61,6 +63,7 @@ public class UserAPI {
 	}
 
 	public void readAnimators() {
+		Log.d("UserAPI", "enter in read Animators");
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.whereEqualTo(ISADMIN, false);
 		query.findInBackground(new FindCallback<ParseUser>() {
@@ -68,7 +71,7 @@ public class UserAPI {
 				if (e == null) {
 					for (ParseUser parseUser : objects) {
 						listAnimators.add(parseUser.getString(USERNAME));
-						handler.sendEmptyMessage(CONNECTION_OK);
+						handler.sendEmptyMessage(CONNECTION);
 					}
 				} else {
 					handler.sendEmptyMessage(0);

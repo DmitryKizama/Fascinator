@@ -2073,15 +2073,14 @@ containing a value of this type.
         public static final int activity_animator=0x7f03001b;
         public static final int activity_crate_order=0x7f03001c;
         public static final int activity_fascinator=0x7f03001d;
-        public static final int activity_inf_order=0x7f03001e;
-        public static final int activity_login=0x7f03001f;
-        public static final int activity_registr=0x7f030020;
-        public static final int row_item_in_list_view=0x7f030021;
-        public static final int row_order_list_view=0x7f030022;
-        public static final int select_dialog_item_material=0x7f030023;
-        public static final int select_dialog_multichoice_material=0x7f030024;
-        public static final int select_dialog_singlechoice_material=0x7f030025;
-        public static final int support_simple_spinner_dropdown_item=0x7f030026;
+        public static final int activity_login=0x7f03001e;
+        public static final int activity_registr=0x7f03001f;
+        public static final int row_item_in_list_view=0x7f030020;
+        public static final int row_order_list_view=0x7f030021;
+        public static final int select_dialog_item_material=0x7f030022;
+        public static final int select_dialog_multichoice_material=0x7f030023;
+        public static final int select_dialog_singlechoice_material=0x7f030024;
+        public static final int support_simple_spinner_dropdown_item=0x7f030025;
     }
     public static final class menu {
         public static final int fascinator=0x7f0c0000;

@@ -2,9 +2,9 @@ package com.ex.adapters;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.ex.activity.InformationAboutOrder;
+import com.ex.activity.AdminFirstActivity;
+import com.ex.activity.CreateOrder;
+import com.ex.api.OrderAPI;
 import com.ex.fascinator.R;
 
 public class ListViewOrderAdapter extends BaseAdapter {
@@ -50,7 +52,7 @@ public class ListViewOrderAdapter extends BaseAdapter {
 					false);
 		}
 
-		String str = getItem(position).toString();
+		final String str = getItem(position).toString();
 
 		((TextView) view.findViewById(R.id.rowTV)).setText(str);
 		((TextView) view.findViewById(R.id.rowTV))
@@ -58,12 +60,14 @@ public class ListViewOrderAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
+
+						OrderAPI.setCustomerName(str);
+						Log.d("UserAPI", "setCustomerName = " + str);
+
+						AdminFirstActivity.connect = true;
 						Intent intent = new Intent(v.getContext(),
-								InformationAboutOrder.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-								| Intent.FLAG_ACTIVITY_NEW_TASK);
+								CreateOrder.class);
 						v.getContext().startActivity(intent);
-						((Activity) v.getContext()).finish();
 					}
 				});
 
