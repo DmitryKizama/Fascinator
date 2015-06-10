@@ -15,12 +15,12 @@ import com.parse.ParseQuery;
 public class OrderAPI {
 
 	private static final String ORDER = "Order";
-	private static final String PHONENUMBER = "phonenumber";
-	private static final String ADRESS = "adress";
-	private static final String DATE = "date";
-	private static final String CUSTOMERNAME = "customername";
-	private static final String NUMBEROFHOURSE = "numberofhourse";
-	private static final String ANIMATOR = "animator";
+	public static final String PHONENUMBER = "phonenumber";
+	public static final String ADRESS = "adress";
+	public static final String DATE = "date";
+	public static final String CUSTOMERNAME = "customername";
+	public static final String NUMBEROFHOURSE = "numberofhourse";
+	public static final String ANIMATOR = "animator";
 	public static final int CONNECTION = 1;
 
 	public Handler h = new Handler();
@@ -40,6 +40,28 @@ public class OrderAPI {
 		parseOrder.put(NUMBEROFHOURSE, order.getNumberofhourse());
 		parseOrder.put(ANIMATOR, order.getAnimatorName());
 		parseOrder.saveInBackground();
+	}
+
+	public void update(String name, final String text, final String key) {
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ORDER);
+		query.whereEqualTo(CUSTOMERNAME, name);
+
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> parseList, ParseException e) {
+				if (e == null) {
+					Log.d("update", "get in update");
+					for (ParseObject parseObject : parseList) {
+						Log.d("update", "get list");
+						parseObject.put(key, text);
+						parseObject.saveInBackground();
+						return;
+					}
+				} else
+					Log.d("OrderAPI", "error = " + e);
+			}
+		});
 	}
 
 	public void readCustumers() {

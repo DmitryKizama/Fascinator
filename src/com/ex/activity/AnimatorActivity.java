@@ -19,6 +19,8 @@ public class AnimatorActivity extends AppCompatActivity {
 	private ListViewOrderAdapter listAdapter;
 	private OrderAPI orderapi = new OrderAPI();
 
+	public static boolean ANIMATOR_CONNECT = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class AnimatorActivity extends AppCompatActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.what == orderapi.CONNECTION) {
-					Log.d("AnimatorActivity", "get in handler");
+					ANIMATOR_CONNECT = true;
 					listAdapter = new ListViewOrderAdapter(
 							AnimatorActivity.this, orderapi.list);
 					listView.setAdapter(listAdapter);

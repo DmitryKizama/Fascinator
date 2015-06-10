@@ -36,6 +36,7 @@ public class AdminFirstActivity extends AppCompatActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.what == orderapi.CONNECTION) {
+					AnimatorActivity.ANIMATOR_CONNECT = false;
 					listAdapter = new ListViewOrderAdapter(
 							AdminFirstActivity.this, orderapi.list);
 					listView.setAdapter(listAdapter);
@@ -51,7 +52,9 @@ public class AdminFirstActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				connect = false;
-				Intent intent = new Intent(v.getContext(), InformationOfOrder.class);
+				AnimatorActivity.ANIMATOR_CONNECT = false;
+				Intent intent = new Intent(v.getContext(),
+						InformationOfOrder.class);
 				startActivity(intent);
 			}
 		});
