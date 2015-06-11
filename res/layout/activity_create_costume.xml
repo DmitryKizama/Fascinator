@@ -3,22 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
-        android:id="@+id/listViewAnimators"
+    <EditText
+        android:id="@+id/editCostume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnTake"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
-    </ListView>
-
-    <Button
-        android:id="@+id/btnTake"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="Take this order" />
+        android:layout_alignParentTop="true"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/editCostume"
+        android:text="Create Costume" />
 
 </RelativeLayout>

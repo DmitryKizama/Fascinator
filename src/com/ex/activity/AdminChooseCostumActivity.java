@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.ex.adapters.ListViewAdapter;
 import com.ex.fascinator.R;
 
-public class AdminChooseCostumrActivity extends AppCompatActivity {
+public class AdminChooseCostumActivity extends AppCompatActivity {
 	private ListView listView;
 	private Button btnCreateOrder;
 
@@ -67,7 +67,7 @@ public class AdminChooseCostumrActivity extends AppCompatActivity {
 	private void createNewOrder() {
 		Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT)
 				.show();
-		Intent intent = new Intent(AdminChooseCostumrActivity.this,
+		Intent intent = new Intent(AdminChooseCostumActivity.this,
 				InformationOfOrder.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);

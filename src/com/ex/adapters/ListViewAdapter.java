@@ -3,6 +3,8 @@ package com.ex.adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,13 +13,16 @@ import android.widget.BaseAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.ex.activity.AdminFirstActivity;
+import com.ex.activity.InformationOfOrder;
+import com.ex.api.OrderAPI;
 import com.ex.fascinator.R;
 
 public class ListViewAdapter extends BaseAdapter {
 	private Context ctx;
 	private LayoutInflater lInflater;
 	private ArrayList<String> animators;
-	private int mSelectedVariation = -1;
+	public static int mSelectedVariation = -1;
 	private RadioButton mSelectedRB;
 	public boolean clicked = false;
 
@@ -52,9 +57,25 @@ public class ListViewAdapter extends BaseAdapter {
 		}
 
 		// Product p = getProduct(position);
-		String str = getItem(position).toString();
+		final String str = getItem(position).toString();
 
+		Log.d("taked", "str = " + str);
 		((TextView) view.findViewById(R.id.rowTV)).setText(str);
+		((TextView) view.findViewById(R.id.rowTV))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						OrderAPI.setCustomerName(str);
+						Log.d("UserAPI", "setCustomerName = " + str);
+
+						AdminFirstActivity.connect = true;
+						Intent intent = new Intent(v.getContext(),
+								InformationOfOrder.class);
+						v.getContext().startActivity(intent);
+						// ((Activity) v.getContext()).finish();
+					}
+				});
 
 		final RadioButton radBtn = (RadioButton) view.findViewById(R.id.rdBtn);
 
@@ -62,6 +83,8 @@ public class ListViewAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
+				OrderAPI.setCustomerName(str);
+
 				clicked = true;
 				if (position != mSelectedVariation && mSelectedRB != null) {
 					mSelectedRB.setChecked(false);

@@ -2,6 +2,7 @@ package com.ex.adapters;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -68,6 +69,7 @@ public class ListViewOrderAdapter extends BaseAdapter {
 						Intent intent = new Intent(v.getContext(),
 								InformationOfOrder.class);
 						v.getContext().startActivity(intent);
+						// ((Activity) v.getContext()).finish();
 					}
 				});
 

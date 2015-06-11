@@ -5,6 +5,7 @@ public class Order {
 	private String phoneNumber;
 	private String date;
 	private String numberofhourse;
+	private String costum;
 	private static final int ANIMATORS = 1;
 	private String animatorName;
 	private String character;
@@ -86,6 +87,14 @@ public class Order {
 
 	public void setAnimatorName(String animatorName) {
 		this.animatorName = animatorName;
+	}
+
+	public String getCostum() {
+		return costum;
+	}
+
+	public void setCostum(String costum) {
+		this.costum = costum;
 	}
 
 }

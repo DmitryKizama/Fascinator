@@ -7,17 +7,33 @@
         android:id="@+id/listView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnCr"
-        android:layout_alignParentTop="true" >
-    </ListView>
-
-    <Button
-        android:id="@+id/btnCr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="Create Order" />
+        android:layout_below="@+id/linearLayout1" >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnCr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_weight="1"
+            android:text="Create Order" />
+
+        <Button
+            android:id="@+id/btncreateCostum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"
+            android:text="Create Costum" />
+    </LinearLayout>
 
 </RelativeLayout>
