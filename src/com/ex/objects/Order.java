@@ -11,7 +11,7 @@ public class Order {
 	private String character;
 	private String Adress;
 	private String AdditionalServices;
-	private int price;
+	private double price;
 
 	public String getCustomerName() {
 		return customerName;
@@ -69,12 +69,12 @@ public class Order {
 		AdditionalServices = additionalServices;
 	}
 
-	public int getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setPrice(double price2) {
+		this.price = price2;
 	}
 
 	public static int getAnimators() {

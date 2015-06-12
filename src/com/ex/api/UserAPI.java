@@ -3,26 +3,24 @@ package com.ex.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.ex.objects.User;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
 import com.parse.SignUpCallback;
 
+@SuppressLint("HandlerLeak")
 public class UserAPI {
 
 	private static final String USERNAME = "username";
-	private static final String PASSWORD = "password";
-	private static final String EMAIL = "email";
 	private static final String ISADMIN = "isAdmin";
 
 	public static final int CONNECTION_OK = 1;
@@ -62,16 +60,48 @@ public class UserAPI {
 	}
 
 	public void readAnimators() {
+		final OrderAPI orderapi = new OrderAPI();
+		orderapi.findAllFreeAnim();
 		Log.d("UserAPI", "enter in read Animators");
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.whereEqualTo(ISADMIN, false);
 		query.findInBackground(new FindCallback<ParseUser>() {
-			public void done(List<ParseUser> objects, ParseException e) {
+			public void done(final List<ParseUser> objects, ParseException e) {
 				if (e == null) {
-					for (ParseUser parseUser : objects) {
-						listAnimators.add(parseUser.getString(USERNAME));
-						handler.sendEmptyMessage(CONNECTION_OK);
-					}
+					Log.d("UserAPI", "enter in query");
+					orderapi.handlerNotUsedAnimators = new Handler() {
+						@Override
+						public void handleMessage(Message msg) {
+							if (msg.what == OrderAPI.EXIST_FREE_ANIM) {
+								Log.d("UserAPI", "anim in handler");
+								boolean flag = true;
+								for (ParseUser parseUser : objects) {
+									Log.d("UserAPI", "anim in first foreach = "
+											+ parseUser.getUsername());
+
+									for (String notUsedAnim : orderapi.listOfNotNeededAnimators) {
+										if (notUsedAnim.equals(parseUser
+												.getString(USERNAME))) {
+											flag = false;
+											Log.d("UserAPI", "flag = false ");
+										}
+
+									}
+									if (flag) {
+										Log.d("UserAPI",
+												"anim = "
+														+ parseUser
+																.getUsername());
+										listAnimators.add(parseUser
+												.getString(USERNAME));
+									}
+									flag = true;
+								}
+								handler.sendEmptyMessage(CONNECTION_OK);
+							}
+						}
+					};
+
 				} else {
 					handler.sendEmptyMessage(0);
 				}

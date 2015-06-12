@@ -21,8 +21,6 @@
             android:id="@+id/btnCr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:text="Create Order" />
 
@@ -30,10 +28,15 @@
             android:id="@+id/btncreateCostum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:text="Create Costum" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Logout" />
     </LinearLayout>
 
 </RelativeLayout>

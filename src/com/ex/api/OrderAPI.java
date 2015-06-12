@@ -25,18 +25,24 @@ public class OrderAPI {
 	public static final String ANIMATOR = "animator";
 	private static final String TAKED = "taked";
 	private static final String COSTUMS = "costum";
+	private static final String SUM = "sum";
 	public static final int CONNECTION = 1;
 
 	public static final int CONNECTION_TAKEORDER = 5;
 	public static final int CONNECTION_CHECK = 3;
 	public static final int CONNECTION_COSTUM = 4;
+	public static final int EXIST_FREE_ANIM = 6;
+
 	public Handler handlerOrderAPI = new Handler();
 	public Handler handlerOrderForAnimator = new Handler();
 	public Handler handlerReadCostum = new Handler();
+	public Handler handlerNotUsedAnimators = new Handler();
 
 	public ArrayList<String> list = new ArrayList<String>();
 
 	public ArrayList<String> listInfOrder = new ArrayList<String>();
+
+	public ArrayList<String> listOfNotNeededAnimators = new ArrayList<String>();
 
 	public static String customername;
 
@@ -49,7 +55,61 @@ public class OrderAPI {
 		parseOrder.put(NUMBEROFHOURSE, order.getNumberofhourse());
 		parseOrder.put(ANIMATOR, order.getAnimatorName());
 		parseOrder.put(TAKED, false);
+		parseOrder.put(SUM, order.getPrice());
 		parseOrder.saveInBackground();
+	}
+
+	public void findAllFreeAnim() {
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ORDER);
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> listParse, ParseException e) {
+				if (e == null) {
+					for (ParseObject parseObject : listParse) {
+						if (parseObject.getBoolean(TAKED)) {
+							Log.d("UserAPI",
+									"anim NOTUSED = "
+											+ parseObject.getString(ANIMATOR));
+							listOfNotNeededAnimators.add(parseObject
+									.getString(ANIMATOR));
+						}
+					}
+					handlerNotUsedAnimators.sendEmptyMessage(EXIST_FREE_ANIM);
+				} else {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void updateAnimatorAndCostum(String name, final String animator,
+			final String costume) {
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ORDER);
+		query.whereEqualTo(CUSTOMERNAME, name);
+		Log.d(ANIMATOR, "animator = " + animator);
+		Log.d(ANIMATOR, "costume = " + costume);
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> parseList, ParseException e) {
+				if (e == null) {
+					Log.d(ANIMATOR, "go in query");
+					for (ParseObject parseObject : parseList) {
+						parseObject.getString(ANIMATOR);
+						parseObject.put(ANIMATOR, animator);
+						parseObject.put(COSTUMS, costume);
+						parseObject.saveInBackground();
+						return;
+					}
+				}
+
+				else {
+					Log.d("taked", "error in take order" + e);
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public void checkForAnimator(String animator) {

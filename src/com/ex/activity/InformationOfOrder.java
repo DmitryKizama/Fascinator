@@ -2,11 +2,11 @@ package com.ex.activity;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ex.adapters.ListViewOrderAdapter;
 import com.ex.api.CostumAPI;
 import com.ex.api.OrderAPI;
 import com.ex.api.UserAPI;
@@ -27,6 +26,7 @@ import com.ex.fascinator.BaseActivity;
 import com.ex.fascinator.R;
 import com.ex.objects.Order;
 
+@SuppressLint("HandlerLeak")
 public class InformationOfOrder extends BaseActivity {
 
 	private EditText telephoneNumber;
@@ -48,12 +48,15 @@ public class InformationOfOrder extends BaseActivity {
 	private CostumAPI costumapi = new CostumAPI();
 
 	private Handler handler = new Handler();
+
 	private static final int CONNECTION = 1;
 	private int checkonlyIfOnlyOneInHandler = 0;
 	private int checkonlyIfOnlyOneInHandler2 = 0;
 
 	private String changedText = "error";
 	private String key;
+	protected double DEFAULT_PRICE = 150;
+	protected double price = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +68,15 @@ public class InformationOfOrder extends BaseActivity {
 		nameClient = (EditText) findViewById(R.id.editClientName);
 		date = (EditText) findViewById(R.id.editDate);
 		adress = (EditText) findViewById(R.id.editAdress);
+		sum = (TextView) findViewById(R.id.tvSum);
 		btnPlus = (Button) findViewById(R.id.btnCreate);
 		btnUpdate = (Button) findViewById(R.id.btnUpdate);
 
+		spinner = (Spinner) findViewById(R.id.spinPersons);
+		userapi.readAnimators();
+
 		setListAnimatorsInSpinner();
 		setListCostumsInSpinner();
-
-		userapi.readAnimators();
 
 		if (AdminFirstActivity.connect) {
 			getinformation();
@@ -85,16 +90,6 @@ public class InformationOfOrder extends BaseActivity {
 
 		btnUpdate.setVisibility(View.INVISIBLE);
 
-		btnUpdate.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				orderapi.update(orderapi.getCustomerName(), changedText, key);
-				Intent intent = new Intent(v.getContext(),
-						AdminFirstActivity.class);
-				startActivity(intent);
-			}
-		});
 	}
 
 	private void setListCostumsInSpinner() {
@@ -103,7 +98,7 @@ public class InformationOfOrder extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				Log.d("Costum", "enter in handler");
-				if (msg.what == costumapi.CONNECTION_COSTUM) {
+				if (msg.what == CostumAPI.CONNECTION_COSTUM) {
 					Log.d("Costum", "enter in IF handler");
 					if (checkonlyIfOnlyOneInHandler2 == 0) {
 						checkonlyIfOnlyOneInHandler2++;
@@ -130,7 +125,7 @@ public class InformationOfOrder extends BaseActivity {
 		userapi.handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == userapi.CONNECTION_OK) {
+				if (msg.what == UserAPI.CONNECTION_OK) {
 					if (checkonlyIfOnlyOneInHandler == 0) {
 						checkonlyIfOnlyOneInHandler++;
 						for (String str : userapi.listAnimators) {
@@ -159,7 +154,7 @@ public class InformationOfOrder extends BaseActivity {
 
 				Log.d("Inf", "text = " + s.toString());
 				changedText = s.toString();
-				key = orderapi.PHONENUMBER;
+				key = OrderAPI.PHONENUMBER;
 			}
 
 			@Override
@@ -183,10 +178,17 @@ public class InformationOfOrder extends BaseActivity {
 				btnUpdate.setVisibility(View.VISIBLE);
 				Log.d("Inf", "text = " + s.toString());
 				changedText = s.toString();
-				key = orderapi.NUMBEROFHOURSE;
+				key = OrderAPI.NUMBEROFHOURSE;
 				if (AnimatorActivity.ANIMATOR_CONNECT) {
 					btnUpdate.setVisibility(View.INVISIBLE);
 				}
+				try {
+					sum.setText("sum "
+							+ (Integer.parseInt(s.toString()) * DEFAULT_PRICE));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
 			}
 
 			@Override
@@ -209,7 +211,7 @@ public class InformationOfOrder extends BaseActivity {
 				btnUpdate.setVisibility(View.VISIBLE);
 				Log.d("Inf", "text = " + s.toString());
 				changedText = s.toString();
-				key = orderapi.CUSTOMERNAME;
+				key = OrderAPI.CUSTOMERNAME;
 				if (AnimatorActivity.ANIMATOR_CONNECT) {
 					btnUpdate.setVisibility(View.INVISIBLE);
 				}
@@ -235,7 +237,7 @@ public class InformationOfOrder extends BaseActivity {
 				btnUpdate.setVisibility(View.VISIBLE);
 				Log.d("Inf", "text = " + s.toString());
 				changedText = s.toString();
-				key = orderapi.DATE;
+				key = OrderAPI.DATE;
 				if (AnimatorActivity.ANIMATOR_CONNECT) {
 					btnUpdate.setVisibility(View.INVISIBLE);
 				}
@@ -261,7 +263,7 @@ public class InformationOfOrder extends BaseActivity {
 				btnUpdate.setVisibility(View.VISIBLE);
 				Log.d("Inf", "text = " + s.toString());
 				changedText = s.toString();
-				key = orderapi.ADRESS;
+				key = OrderAPI.ADRESS;
 				if (AnimatorActivity.ANIMATOR_CONNECT) {
 					btnUpdate.setVisibility(View.INVISIBLE);
 				}
@@ -290,14 +292,14 @@ public class InformationOfOrder extends BaseActivity {
 	}
 
 	private void getinformation() {
-		Log.d("UserAPI", "getCustomerName = " + orderapi.getCustomerName());
+		Log.d("UserAPI", "getCustomerName = " + OrderAPI.getCustomerName());
 		orderapi.readOrder();
 		showProgress();
 		orderapi.handlerOrderAPI = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				hideProgress();
-				if (msg.what == orderapi.CONNECTION) {
+				if (msg.what == OrderAPI.CONNECTION) {
 					telephoneNumber.setText(orderapi.listInfOrder.get(0));
 					adress.setText(orderapi.listInfOrder.get(1));
 					date.setText(orderapi.listInfOrder.get(2));
@@ -309,15 +311,14 @@ public class InformationOfOrder extends BaseActivity {
 							android.R.layout.simple_spinner_item, data);
 					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-					spinner = (Spinner) findViewById(R.id.spinPersons);
 					spinner.setAdapter(adapter);
 					spinner.setPrompt("Animator");
 					if (AnimatorActivity.ANIMATOR_CONNECT) {
 						spinner.setEnabled(false);
 						spinner.setClickable(false);
 
-						spinnerCostum.setEnabled(false);
-						spinnerCostum.setClickable(false);
+						// spinnerCostum.setEnabled(false);
+						// spinnerCostum.setClickable(false);
 					}
 					if (AnimatorActivity.ANIMATOR_CONNECT) {
 						Log.d("G", "AnimatorActivity.ANIMATOR_CONNECT = "
@@ -333,9 +334,11 @@ public class InformationOfOrder extends BaseActivity {
 					Log.d("UserAPI",
 							"animator = " + orderapi.listInfOrder.get(5));
 
+					Log.d("UserAPI", "data = " + data.size());
 					for (int j = 0; j < data.size(); j++) {
 						if (orderapi.listInfOrder.get(5).equals(data.get(j))) {
 							spinner.setSelection(j);
+							return;
 						}
 					}
 
@@ -343,9 +346,29 @@ public class InformationOfOrder extends BaseActivity {
 					Log.d("CreateOrder", "Error");
 			}
 		};
+
+		btnUpdate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(final View v) {
+				orderapi.update(OrderAPI.getCustomerName(), changedText, key);
+				Log.d("GAVNO", "spinner = "
+						+ spinner.getSelectedItem().toString());
+				Log.d("GAVNO", "spinner = "
+						+ spinnerCostum.getSelectedItem().toString());
+
+				orderapi.updateAnimatorAndCostum(OrderAPI.getCustomerName(),
+						spinner.getSelectedItem().toString(), spinnerCostum
+								.getSelectedItem().toString());
+				Intent intent = new Intent(v.getContext(),
+						AdminFirstActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void createorder() {
+		btnUpdate.setVisibility(View.GONE);
 		showProgress();
 		handler = new Handler() {
 			@Override
@@ -369,6 +392,37 @@ public class InformationOfOrder extends BaseActivity {
 
 			}
 		};
+		TextWatcher textWatcherHours = new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				Log.d("Inf", "text = " + s.toString());
+				changedText = s.toString();
+				key = OrderAPI.NUMBEROFHOURSE;
+				try {
+					sum.setText("sum "
+							+ (Integer.parseInt(s.toString()) * DEFAULT_PRICE));
+					price = Integer.parseInt(s.toString()) * DEFAULT_PRICE;
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+			}
+
+		};
+		numberHours.addTextChangedListener(textWatcherHours);
 
 		btnPlus.setOnClickListener(new OnClickListener() {
 
@@ -383,6 +437,7 @@ public class InformationOfOrder extends BaseActivity {
 					order.setNumberofhours(numberHours.getText().toString());
 					order.setAnimatorName(spinner.getSelectedItem().toString());
 					order.setCostum(spinnerCostum.getSelectedItem().toString());
+					order.setPrice(price);
 					OrderAPI ord = new OrderAPI();
 					ord.create(order);
 					Intent intent = new Intent(v.getContext(),
@@ -407,12 +462,14 @@ public class InformationOfOrder extends BaseActivity {
 		userapi.handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == userapi.CONNECTION_OK) {
+				if (msg.what == UserAPI.CONNECTION_OK) {
 					if (checkonlyIfOnlyOneInHandler == 0) {
 						checkonlyIfOnlyOneInHandler++;
 						for (String str : userapi.listAnimators) {
+							Log.d("UserAPI", "data = " + str);
 							data.add(str);
 						}
+						Log.d("UserAPI", "data = " + data.size());
 						handler.sendEmptyMessage(CONNECTION);
 					}
 				} else {

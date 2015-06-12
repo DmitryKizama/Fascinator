@@ -1,5 +1,6 @@
 package com.ex.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,9 +17,9 @@ import android.widget.Toast;
 
 import com.ex.api.UserAPI;
 import com.ex.fascinator.R;
-import com.ex.objects.Animators;
 import com.ex.objects.User;
 
+@SuppressLint("HandlerLeak")
 public class Registration extends AppCompatActivity {
 
 	private TextView entLogin;
@@ -124,7 +125,7 @@ public class Registration extends AppCompatActivity {
 		c.sync(user);
 		c.handler = new Handler() {
 			public void handleMessage(Message msg) {
-				if (msg.what == c.CONNECTION_OK) {
+				if (msg.what == UserAPI.CONNECTION_OK) {
 					Log.d("Shit", "handler ok");
 					autorisation();
 				} else {

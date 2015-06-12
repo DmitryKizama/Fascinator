@@ -1,6 +1,6 @@
 package com.ex.activity;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,10 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ex.api.UserAPI;
+import com.ex.fascinator.BaseActivity;
 import com.ex.fascinator.R;
-import com.parse.ParseUser;
 
-public class Login extends Activity {
+@SuppressLint("HandlerLeak") public class Login extends BaseActivity {
 	private TextView entLogin;
 	private TextView entPassword;
 	private Button btnLogin;
@@ -30,10 +30,8 @@ public class Login extends Activity {
 		setContentView(R.layout.activity_login);
 		Log.d("User", "start login activity");
 		// comment this if u want to see login and registration pages!
-		// ParseUser currentUser = ParseUser.getCurrentUser();
-		// if (currentUser != null) {
-		// Log.d("User", "user = " + currentUser.getUsername());
-		// loginAdmin();
+		// if (ParseUser.getCurrentUser() != null) {
+		// login();
 		// }
 		entLogin = (TextView) findViewById(R.id.etnNickName);
 		entPassword = (TextView) findViewById(R.id.etPassword);
@@ -65,8 +63,10 @@ public class Login extends Activity {
 		userAPI.login(entLogin.getText().toString(), entPassword.getText()
 				.toString());
 		Log.d("login", "entered in method");
+		showProgress();
 		userAPI.handler = new Handler() {
 			public void handleMessage(Message msg) {
+				hideProgress();
 				switch (msg.what) {
 				case ISADMIN_TRUE:
 					loginAdmin();

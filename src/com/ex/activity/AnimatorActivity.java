@@ -1,5 +1,7 @@
 package com.ex.activity;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +19,7 @@ import com.ex.fascinator.BaseActivity;
 import com.ex.fascinator.R;
 import com.parse.ParseUser;
 
-public class AnimatorActivity extends BaseActivity {
+@SuppressLint("HandlerLeak") public class AnimatorActivity extends BaseActivity {
 
 	private ListView listView;
 
@@ -25,6 +27,7 @@ public class AnimatorActivity extends BaseActivity {
 	private OrderAPI orderapi = new OrderAPI();
 
 	private Button btnTake;
+	private Button btnLogout;
 
 	public static boolean ANIMATOR_CONNECT = false;
 
@@ -35,6 +38,7 @@ public class AnimatorActivity extends BaseActivity {
 
 		listView = (ListView) findViewById(R.id.listViewAnimators);
 		btnTake = (Button) findViewById(R.id.btnTake);
+		btnLogout = (Button) findViewById(R.id.btnLogout);
 
 		orderapi.checkForAnimator(ParseUser.getCurrentUser().getUsername());
 		Log.d("animator", "current user= "
@@ -44,7 +48,7 @@ public class AnimatorActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				Log.d("animator", "get in handler");
-				if (msg.what == orderapi.CONNECTION_CHECK) {
+				if (msg.what == OrderAPI.CONNECTION_CHECK) {
 					Log.d("animator", "get in handler connection");
 					AdminFirstActivity.connect = true;
 					Intent intent = new Intent(AnimatorActivity.this,
@@ -66,7 +70,7 @@ public class AnimatorActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				hideProgress();
-				if (msg.what == orderapi.CONNECTION) {
+				if (msg.what == OrderAPI.CONNECTION) {
 					ANIMATOR_CONNECT = true;
 					listAdapter = new ListViewAdapter(AnimatorActivity.this,
 							orderapi.list);
@@ -82,14 +86,14 @@ public class AnimatorActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				if (ListViewAdapter.mSelectedVariation != -1) {
-					orderapi.takeOrder(orderapi.getCustomerName());
+					orderapi.takeOrder(OrderAPI.getCustomerName());
 					Log.d("taked",
-							"getCustomerName = " + orderapi.getCustomerName());
+							"getCustomerName = " + OrderAPI.getCustomerName());
 					showProgress();
 					orderapi.handlerOrderAPI = new Handler() {
 						@Override
 						public void handleMessage(Message msg) {
-							if (msg.what == orderapi.CONNECTION_TAKEORDER) {
+							if (msg.what == OrderAPI.CONNECTION_TAKEORDER) {
 								hideProgress();
 								Intent intent = new Intent(
 										AnimatorActivity.this,
@@ -103,6 +107,17 @@ public class AnimatorActivity extends BaseActivity {
 				} else
 					error();
 
+			}
+		});
+
+		btnLogout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				ParseUser.logOut();
+				Intent intent = new Intent(v.getContext(), Login.class);
+				startActivity(intent);
+				((Activity) v.getContext()).finish();
 			}
 		});
 
